@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import CustomLoader from "../../components/CustomLoader";
 import styled from "styled-components";
@@ -8,70 +8,75 @@ import { useQuery } from "react-query";
 import MealDiet from "./MealDiet";
 
 interface Props {
-  isLoading?: boolean;
-  diet?: any;
-  nutrients?: any[];
+	isLoading?: boolean;
+	diet?: any;
+	nutrients?: any[];
 }
 const Diet = (props: Props) => {
-  const { id } = useParams();
+	const { id } = useParams();
 
-  const fetchDiet = async () => {
-    const response = await axios(
-      `https://api.spoonacular.com/mealplanner/generate?apiKey=${process.env.REACT_APP_API_KEY}&timeFrame=day&diet=${id}`
-    );
-    return response;
-  };
-  const { data, isLoading } = useQuery(["fetch-diet", id], fetchDiet);
-  console.log(data, "data diet component");
-  let objectClone = {};
-  objectClone = { ...data?.data?.meals, ...data?.data?.nutrients };
-  console.log(objectClone, "object");
+	const fetchDiet = async () => {
+		const response = await axios(
+			`https://api.spoonacular.com/mealplanner/generate?apiKey=${process.env.REACT_APP_API_KEY}&timeFrame=day&diet=${id}`
+		);
+		return response;
+	};
 
-  return (
-    <>
-      <Navbar />
-      {
-        <>
-          {isLoading ? (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "30px",
-              }}
-            >
-              <CustomLoader />
-            </div>
-          ) : (
-            <>
-              <div>
-                {data?.data?.nutrients &&
-                  Object.entries(data?.data?.nutrients)?.map((item: any) => (
-                    <div>
-                      <p>{item[0]}</p>
-                      <p>{item[1].toFixed(0)}</p>
-                    </div>
-                  ))}
-              </div>
-              <div>
-                {data?.data?.meals.map((meal: any) => (
-                  <MealDiet key={meal.id} meal={meal} />
-                ))}
-              </div>
-            </>
-          )}
-        </>
-      }
-    </>
-  );
+	const { data, isLoading } = useQuery(["fetch-diet", id], fetchDiet);
+	console.log(data, "data diet component");
+	let objectClone = {};
+	objectClone = { ...data?.data?.meals, ...data?.data?.nutrients };
+	console.log(objectClone, "object");
+
+	return (
+		<>
+			<Navbar />
+			{
+				<>
+					{isLoading ? (
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "center",
+								marginTop: "30px",
+							}}
+						>
+							<CustomLoader />
+						</div>
+					) : (
+						<>
+							<div>
+								{data?.data?.nutrients &&
+									Object.entries(data?.data?.nutrients)?.map((item: any) => (
+										<div>
+											<p>{item[0]}</p>
+											<p>{item[1].toFixed(0)}</p>
+										</div>
+									))}
+							</div>
+							<div>
+								{data?.data?.meals.map((meal: any) => (
+									<MealDiet key={meal.id} meal={meal} />
+								))}
+							</div>
+						</>
+					)}
+				</>
+			}
+		</>
+	);
 };
 
 export default Diet;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-  grid-gap: 3rem;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+	grid-gap: 3rem;
 `;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Box = styled.div`
   padding: 10px 20px;
   height: 300px;
